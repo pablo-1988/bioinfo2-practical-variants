@@ -1,0 +1,29 @@
+name: bioinfo2-variants
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.10
+
+  # --- Read QC -------------------------------------------------------
+  - fastqc          # per-base quality, adapters, duplication
+  - fastp           # trimming + filtering, with its own before/after report
+  - multiqc         # merges every report (QC, flagstat, GATK metrics) into one
+
+  # --- Mapping -------------------------------------------------------
+  - bwa             # the aligner (bwa mem)
+  - samtools        # sort, index, flagstat, depth, view
+
+  # --- Variant calling ------------------------------------------------
+  - gatk4           # MarkDuplicates, BQSR, HaplotypeCaller, joint genotyping
+  - openjdk=17      # GATK 4 runs on the JVM; pinned so it does not surprise you
+  - bcftools        # VCF filtering, stats, set operations
+  - htslib          # bgzip + tabix, needed to index VCFs
+
+  # --- Odds and ends ---------------------------------------------------
+  - seqkit          # quick FASTA/FASTQ statistics
+  - r-base          # only needed for the BQSR before/after plot
+  - r-ggplot2
+  - r-gplots
+  - r-gsalib

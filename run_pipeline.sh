@@ -16,6 +16,7 @@
 #     ./scripts/08_joint_genotyping.sh
 #     ./scripts/09_filter_variants.sh
 #     ./scripts/10_evaluate.sh
+#     python3 scripts/11_report.py
 #
 # Use this wrapper only to run the whole thing unattended, or to catch up if
 # you fell behind:
@@ -39,6 +40,7 @@ STEPS=(
   scripts/08_joint_genotyping.sh
   scripts/09_filter_variants.sh
   scripts/10_evaluate.sh
+  scripts/11_report.py
 )
 
 [ -d data/raw ] || {
@@ -67,7 +69,10 @@ fi
 
 for step in "${selected[@]}"; do
   printf "\n\033[1;32m######## %s ########\033[0m\n" "$step"
-  bash "$step"
+  case "$step" in
+    *.py) python3 "$step" ;;
+    *)    bash "$step" ;;
+  esac
 done
 
-printf "\n\033[1;32mAll requested steps finished. Reports are under results/\033[0m\n"
+printf "\n\033[1;32mAll requested steps finished. Open results/10_report/report.html\033[0m\n"

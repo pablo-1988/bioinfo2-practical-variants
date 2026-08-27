@@ -372,6 +372,27 @@ false negative will be in the duplicated segment on chr1. The errors are not
 random, and knowing *where* your pipeline fails is more useful than knowing
 *how often*.
 
+### Step 11 — Build the visual report
+
+```bash
+python3 scripts/11_report.py
+open results/10_report/report.html
+```
+
+Reads everything the previous steps wrote and produces one self-contained
+HTML page: coverage along the genome with the two suspect regions shaded, the
+coordinate of every false positive and false negative, the filtering
+trade-off as raw → filtered, and the BQSR before/after calibration curve
+(which also replaces the `AnalyzeCovariates` PDF when R refuses to build it).
+
+Standard library only — no plotting package to install. The figures are
+inline SVG, so screenshot a panel or copy the `<svg>` block into your report.
+
+**A figure is for finding things, not for proving them.** Use the coverage
+panel to locate the anomalies, then go back to the BAM and the VCF and get
+the numbers. A report that shows the picture without the coordinates and
+counts behind it has not done the work.
+
 ---
 
 ## 3. What to hand in

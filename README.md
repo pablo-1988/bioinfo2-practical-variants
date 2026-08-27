@@ -110,6 +110,7 @@ python3 scripts/simulate_reads.py --outdir data
 ./scripts/08_joint_genotyping.sh    # GenomicsDBImport + GenotypeGVCFs
 ./scripts/09_filter_variants.sh     # hard filtering (SNPs and indels apart)
 ./scripts/10_evaluate.sh            # concordance against the known truth
+python3 scripts/11_report.py        # one HTML report with every figure
 
 # ... or run them all unattended (~5 min for three samples, 4 threads)
 ./run_pipeline.sh
@@ -146,14 +147,16 @@ SAMPLES=sample01 THREADS=8 ./run_pipeline.sh
 │   ├── 07_call_variants.sh       # │
 │   ├── 08_joint_genotyping.sh    # │
 │   ├── 09_filter_variants.sh     # │
-│   └── 10_evaluate.sh            # ┘
+│   ├── 10_evaluate.sh            # ┘
+│   └── 11_report.py              # builds the visual report (stdlib only)
 ├── data/                    # created by the script (not in git)
 │   ├── reference/           # reference.fasta + known_sites.vcf (the "dbSNP")
 │   ├── raw/                 # sample0{1,2,3}_R{1,2}.fastq.gz
 │   └── truth/               # the real genotypes — DO NOT OPEN before step 10
 └── results/                 # created by the pipeline
     ├── 01_qc_raw/  02_mapping/  03_dedup/  04_bqsr/  05_alignment_qc/
-    └── 06_gvcf/  07_joint_genotyping/  08_filtered/  09_evaluation/
+    ├── 06_gvcf/  07_joint_genotyping/  08_filtered/  09_evaluation/
+    └── 10_report/report.html   # <- the figures, open this in a browser
 ```
 
 ## The dataset
@@ -189,6 +192,24 @@ your own run, is most of the point.
 
 The data is regenerated deterministically from `--seed 42`, so everyone in
 the class gets identical files.
+
+## The figures
+
+`scripts/11_report.py` turns everything the pipeline wrote into a single
+self-contained HTML page — coverage along the genome, the position of every
+wrong call, what filtering bought and cost, and whether BQSR actually made
+the base qualities honest. It needs no plotting library (the SVG is written
+by hand from the standard library), follows your system's light/dark
+setting, and the figures are inline SVG so you can screenshot a panel or copy
+the `<svg>` block straight into your report.
+
+```bash
+python3 scripts/11_report.py
+open results/10_report/report.html      # xdg-open on Linux
+```
+
+Use the figures to *find* things, not to replace the numbers: the report also
+prints the concordance table, and your write-up needs both.
 
 ## What you hand in
 
